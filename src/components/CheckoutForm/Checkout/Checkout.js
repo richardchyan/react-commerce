@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
+import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button, CssBaseline } from '@material-ui/core';
 import useStyles from './styles';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 import { commerce } from '../../../lib/commerce';
@@ -10,9 +10,11 @@ const steps = ['Shipping Address', 'Payment Details',];
 
 const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
    const [activeStep, setActiveStep] = useState(0);
-   const classes = useStyles();
    const [checkoutToken, setCheckoutToken] = useState(null);
    const [shippingData, setShippingData] = useState({});
+   const [isFinished, setIsFinished] = useState(false);
+   const classes = useStyles();
+   const history = useHistory();
 
    // generating a checkout token as soon as someone enters the checkout process
    useEffect(() => {
@@ -25,6 +27,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
 
          } catch(error){
             console.log(error);
+            history.push('/');
          }
       }
       generateToken();
@@ -86,6 +89,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
    
    return ( 
       <>
+      <CssBaseline />
          <div className={classes.toolbar}/>
          <main className={classes.layout}>
             <Paper className={classes.paper}>

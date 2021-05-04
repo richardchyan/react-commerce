@@ -5,6 +5,8 @@ import { useFormContext, Controller } from "react-hook-form";
 const FormInput = ({ name, label, required }) => {
   const { control } = useFormContext();
 
+// must included spreaded out {field} in order to fill out form correctly! 
+
   return (
     <Grid item xs={12} sm={6}>
       <Controller
@@ -27,6 +29,8 @@ const FormInput = ({ name, label, required }) => {
 
 export default FormInput;
 
+
+// DOES NOT fill out address form correctly, returns empty strings 
 // import React, { useState } from 'react';
 // import { TextField, Grid } from '@material-ui/core';
 // import { useFormContext, Controller } from 'react-hook-form';

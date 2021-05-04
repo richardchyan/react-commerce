@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core';
 import useStyles from './styles';
-
+import { Link } from 'react-router-dom';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 import { commerce } from '../../../lib/commerce';
@@ -24,7 +24,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
             setCheckoutToken(token);
 
          } catch(error){
-            // console.log(error);
+            console.log(error);
          }
       }
       generateToken();
@@ -44,14 +44,44 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
       nextStep();
    }
 
-   const Confirmation = () => (
-      <div> 
-         Confirmation
+   let Confirmation = () => order.customer ? (
+      <>
+         <div>
+            <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname} </Typography>
+            <Divider className={classes.divider}/>
+            <Typography variant="subtitle2"> Order ref: {order.customer_reference}</Typography>
+            <br/>
+            <Button component={Link} to="/" variant="outlined" type="button"> Back to home</Button>
+         </div>
+      </>
+   ) : (
+      <div className={classes.spinner}>
+         <CircularProgress />
+         
       </div>
-   )
+      
+   );
+
+   if (error){
+      <>
+         <Typography variant="h6">Error: {error}</Typography>
+         <br/>
+         <Button component={Link} to="/" variant="outlined" type="button"> Back to home</Button>
+      </>
+   }
 
    const Form = () => { 
-    return activeStep == 0 ? <AddressForm checkoutToken={checkoutToken} next={next} /> : <PaymentForm shippingData={shippingData} checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} onCaptureCheckout={onCaptureCheckout} />
+    return activeStep === 0 ? 
+    <AddressForm 
+      checkoutToken={checkoutToken} 
+      next={next} /> : 
+   <PaymentForm 
+      shippingData={shippingData} 
+      checkoutToken={checkoutToken} 
+      nextStep={nextStep} 
+      backStep={backStep} 
+      onCaptureCheckout={onCaptureCheckout} 
+   />
    }
    
    return ( 
